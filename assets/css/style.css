@@ -170,50 +170,46 @@ h1{
 }
 
 .store-logos{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:16px;
   width:100%;
 }
 
 .store{
-  background:#F9F7F2;
-  border-radius:12px;
-  padding:10px;
-  border:1px solid #EEE7DB;
   display:flex;
   align-items:center;
   justify-content:center;
-  min-height:54px;
-  min-width:0;
 }
 
 .store img{
-  display:block;
   object-fit:contain;
-  max-width:100%;
+  display:block;
+  opacity:0.9;
 }
 
-/* INDIVIDUAL LOGOS */
+/* LOGOS */
 
 .amazon img{
-  width:42px;
+  height:20px;
 }
 
 .mercadolivre img{
-  width:46px;
+  height:22px;
 }
 
 .magalu img{
-  width:72px;
-}
-
-.shein img{
-  width:54px;
+  height:20px;
 }
 
 .shopee img{
-  width:74px;
+  height:22px;
+}
+
+.shein img{
+  height:16px;
 }
 
 /* FOOTER */
@@ -292,32 +288,24 @@ footer{
     font-size:17px;
   }
 
-  .store-logos{
-    grid-template-columns:repeat(5,1fr);
-  }
-
-  .store{
-    min-height:58px;
-  }
-
   .amazon img{
-    width:52px;
+    height:24px;
   }
 
   .mercadolivre img{
-    width:56px;
+    height:26px;
   }
 
   .magalu img{
-    width:84px;
-  }
-
-  .shein img{
-    width:62px;
+    height:24px;
   }
 
   .shopee img{
-    width:88px;
+    height:26px;
+  }
+
+  .shein img{
+    height:20px;
   }
 
   .join-popup{
