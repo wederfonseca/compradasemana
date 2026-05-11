@@ -35,6 +35,7 @@ body{
   padding:20px 16px;
   text-align:center;
   box-shadow:0 8px 24px rgba(0,0,0,0.05);
+  border:1px solid #EFE7DA;
   overflow:hidden;
 }
 
@@ -48,7 +49,7 @@ body{
 }
 
 .logo{
-  width:120px;
+  width:140px;
   max-width:100%;
   border-radius:22px;
   margin-bottom:10px;
@@ -68,12 +69,12 @@ body{
   max-width:100%;
 }
 
-/* TITULO */
+/* TITLE */
 
 h1{
   font-size:30px;
-  line-height:1.02;
-  letter-spacing:-1.3px;
+  line-height:1.08;
+  letter-spacing:-1px;
   margin-bottom:14px;
   font-weight:800;
   word-break:break-word;
@@ -100,7 +101,7 @@ h1{
   max-width:100%;
 }
 
-/* CONTADOR */
+/* SPOTS */
 
 .spots-box{
   background:#EEF2E6;
@@ -164,41 +165,62 @@ h1{
 .stores p{
   font-size:12px;
   color:#6D655F;
-  margin-bottom:12px;
+  margin-bottom:14px;
   font-weight:600;
 }
 
 .store-logos{
   display:grid;
-  grid-template-columns:repeat(5,minmax(0,1fr));
-  gap:6px;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
   width:100%;
 }
 
 .store{
   background:#F9F7F2;
-  border-radius:10px;
-  padding:8px;
+  border-radius:12px;
+  padding:10px;
   border:1px solid #EEE7DB;
   display:flex;
   align-items:center;
   justify-content:center;
-  min-height:42px;
+  min-height:54px;
   min-width:0;
 }
 
 .store img{
-  max-width:100%;
-  max-height:16px;
-  object-fit:contain;
   display:block;
+  object-fit:contain;
+  max-width:100%;
+}
+
+/* INDIVIDUAL LOGOS */
+
+.amazon img{
+  width:42px;
+}
+
+.mercadolivre img{
+  width:46px;
+}
+
+.magalu img{
+  width:72px;
+}
+
+.shein img{
+  width:54px;
+}
+
+.shopee img{
+  width:74px;
 }
 
 /* FOOTER */
 
 footer{
   text-align:center;
-  font-size:10px;
+  font-size:11px;
   color:#7A726C;
   padding:18px 0;
 }
@@ -255,7 +277,11 @@ footer{
   }
 
   .hero{
-    padding:28px 24px;
+    padding:30px 26px;
+  }
+
+  .logo{
+    width:170px;
   }
 
   h1{
@@ -266,12 +292,32 @@ footer{
     font-size:17px;
   }
 
-  .logo{
-    width:160px;
+  .store-logos{
+    grid-template-columns:repeat(5,1fr);
   }
 
-  .store img{
-    max-height:22px;
+  .store{
+    min-height:58px;
+  }
+
+  .amazon img{
+    width:52px;
+  }
+
+  .mercadolivre img{
+    width:56px;
+  }
+
+  .magalu img{
+    width:84px;
+  }
+
+  .shein img{
+    width:62px;
+  }
+
+  .shopee img{
+    width:88px;
   }
 
   .join-popup{
