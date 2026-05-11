@@ -100,7 +100,6 @@ export default async (request, context) => {
 
       console.log(
 
-        `[collect] ` +
         `[${body.custom_data?.group_name || 'unknown'}] ` +
         `[Lead] ` +
         `[DEDUPED]`
