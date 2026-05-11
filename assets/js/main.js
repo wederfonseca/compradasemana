@@ -95,7 +95,9 @@ document.addEventListener('DOMContentLoaded', () => {
       fbq(
         'track',
         'Lead',
-        {},
+        {
+          group_name: 'CompraDaSemana'
+        },
         {
           eventID: eventId
         }
@@ -118,7 +120,8 @@ document.addEventListener('DOMContentLoaded', () => {
         custom_data: {
 
           destination: 'whatsapp_group',
-          brand: 'Compra da Semana'
+          brand: 'Compra da Semana',
+          group_name: 'CompraDaSemana'
 
         }
 
