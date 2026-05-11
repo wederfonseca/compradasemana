@@ -22,7 +22,7 @@ export default async (request, context) => {
       !REDIS_TOKEN
     ) {
 
-      console.error('[CAPI] missing env vars');
+      console.error('[collect] missing env vars');
 
       return new Response(
         'Server Misconfigured',
@@ -66,42 +66,97 @@ export default async (request, context) => {
 
     }
 
-    /* ================= DEDUP ================= */
+    /* ================= REDIS KEYS ================= */
 
-    const dedupeKey = `capi:event:${body.event_id}`;
+    const dedupeKey =
+      `capi:event:${body.event_id}`;
+
+    const today =
+      new Date().toISOString().slice(0, 10);
+
+    const counterKey =
+      `capi:counter:${today}`;
+
+    /* ================= DEDUP CHECK ================= */
 
     const dedupeCheck = await fetch(
+
       `${REDIS_URL}/get/${dedupeKey}`,
+
       {
+
         headers: {
           Authorization: `Bearer ${REDIS_TOKEN}`
         }
+
       }
+
     );
 
-    const dedupeJson = await dedupeCheck.json();
+    const dedupeJson =
+      await dedupeCheck.json();
 
     if (dedupeJson.result !== null) {
 
+      console.log(
+
+        `[collect] ` +
+        `[${body.custom_data?.group_name || 'unknown'}] ` +
+        `[Lead] ` +
+        `[DEDUPED]`
+
+      );
+
       return new Response(
+
         JSON.stringify({
           ok: true,
           deduped: true
         }),
+
         { status: 200 }
+
       );
 
     }
 
-    // salva por 48h
+    /* ================= SAVE DEDUPE ================= */
+
     await fetch(
+
       `${REDIS_URL}/set/${dedupeKey}/1?ex=172800`,
+
       {
+
         headers: {
           Authorization: `Bearer ${REDIS_TOKEN}`
         }
+
       }
+
     );
+
+    /* ================= COUNTER ================= */
+
+    const counterRes = await fetch(
+
+      `${REDIS_URL}/incr/${counterKey}`,
+
+      {
+
+        headers: {
+          Authorization: `Bearer ${REDIS_TOKEN}`
+        }
+
+      }
+
+    );
+
+    const counterJson =
+      await counterRes.json();
+
+    const dailyCount =
+      counterJson.result || 0;
 
     /* ================= USER DATA ================= */
 
@@ -117,8 +172,13 @@ export default async (request, context) => {
 
     };
 
-    if (body.fbp) userData.fbp = body.fbp;
-    if (body.fbc) userData.fbc = body.fbc;
+    if (body.fbp) {
+      userData.fbp = body.fbp;
+    }
+
+    if (body.fbc) {
+      userData.fbc = body.fbc;
+    }
 
     if (body.external_id) {
       userData.external_id = [body.external_id];
@@ -134,17 +194,31 @@ export default async (request, context) => {
 
           event_name: 'Lead',
 
-          event_time: Math.floor(Date.now() / 1000),
+          event_time:
+            Math.floor(Date.now() / 1000),
 
-          event_id: body.event_id,
+          event_id:
+            body.event_id,
 
-          event_source_url: body.event_source_url,
+          event_source_url:
+            body.event_source_url,
 
           action_source: 'website',
 
           user_data: userData,
 
-          custom_data: body.custom_data || {}
+          custom_data: {
+
+            destination:
+              body.custom_data?.destination || null,
+
+            brand:
+              body.custom_data?.brand || null,
+
+            group_name:
+              body.custom_data?.group_name || null
+
+          }
 
         }
 
@@ -172,18 +246,40 @@ export default async (request, context) => {
 
     );
 
+    /* ================= LOG ================= */
+
+    const shortEventId =
+      body.event_id.slice(0, 8);
+
     console.log(
-      `[CAPI] Lead status=${metaRes.status}`
+
+      `[collect] ` +
+      `[${body.custom_data?.group_name || 'unknown'}] ` +
+      `[Lead] ` +
+      `[events_today=${dailyCount}] ` +
+      `[event=${shortEventId}] ` +
+      `[status=${metaRes.status}]`
+
     );
 
+    /* ================= RESPONSE ================= */
+
     return new Response(
-      JSON.stringify({ ok: true }),
+
+      JSON.stringify({
+        ok: true
+      }),
+
       { status: 200 }
+
     );
 
   } catch (err) {
 
-    console.error('[CAPI] handler error', err);
+    console.error(
+      '[collect] handler error',
+      err
+    );
 
     return new Response(
       'Server Error',
