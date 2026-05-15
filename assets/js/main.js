@@ -1,4 +1,4 @@
-const WAIT_MS = 250;
+const WAIT_MS = 500;
 
 let locked = false;
 
@@ -14,46 +14,22 @@ function generateEventId() {
 
 }
 
-function readCookie(name) {
-
-  const match = document.cookie.match(
-    '(^|;)\\s*' + name + '\\s*=\\s*([^;]+)'
-  );
-
-  return match ? decodeURIComponent(match.pop()) : null;
-
-}
-
-function getExternalId() {
-
-  const fbp = readCookie('_fbp');
-
-  if (fbp) return fbp;
-
-  return btoa(
-    navigator.userAgent +
-    Intl.DateTimeFormat().resolvedOptions().timeZone
-  );
-
-}
-
-async function sendEvent(endpoint, payload) {
+async function logClick() {
 
   try {
 
-    await fetch(endpoint, {
+    await fetch('/collect', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'x-capi-signature': 'v1'
       },
-      body: payload,
       keepalive: true
     });
 
   } catch (err) {
 
-    console.warn('[CAPI] send error', err);
+    console.warn('[log] send error', err);
 
   }
 
@@ -86,11 +62,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
       }
 
+      /* ================= FEEDBACK VISUAL ================= */
+
+      button.textContent = 'Abrindo...';
+      button.style.opacity = '0.75';
+
+      /* ================= BROWSER EVENT ================= */
+
       const eventId = generateEventId();
 
       sessionStorage.setItem('lead_sent', eventId);
-
-      /* ================= BROWSER EVENT ================= */
 
       fbq(
         'track',
@@ -103,31 +84,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       );
 
-      /* ================= SERVER EVENT ================= */
+      /* ================= LOG CLICK ================= */
 
-      const payload = JSON.stringify({
-
-        event_name: 'Lead',
-        event_id: eventId,
-
-        event_source_url: window.location.href,
-
-        fbp: readCookie('_fbp'),
-        fbc: readCookie('_fbc'),
-
-        external_id: getExternalId(),
-
-        custom_data: {
-
-          destination: 'whatsapp_group',
-          brand: 'Compra da Semana',
-          group_name: 'CompraDaSemana'
-
-        }
-
-      });
-
-      await sendEvent('/collect', payload);
+      logClick();
 
       /* ================= REDIRECT ================= */
 
@@ -193,15 +152,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!popup || !popupName || !spotsNumber) return;
 
+    if (spots <= 1) return;
+
     popupName.textContent = randomName();
 
-    if (spots > 1) {
+    spots--;
 
-      spots--;
-
-      spotsNumber.textContent = spots;
-
-    }
+    spotsNumber.textContent = spots;
 
     popup.style.display = "flex";
 

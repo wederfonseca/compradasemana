@@ -6,7 +6,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <title>Compra da Semana</title>
+  <title>Compra da Semana — Ofertas de mercado no WhatsApp</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Receba ofertas de mercado, limpeza, higiene e produtos para casa com preços mais baixos. Grupo gratuito no WhatsApp com +12 mil membros."/>
+
+  <!-- OPEN GRAPH -->
+  <meta property="og:type"        content="website"/>
+  <meta property="og:url"         content="https://compradasemana.netlify.app/"/>
+  <meta property="og:title"       content="Compra da Semana — Ofertas de mercado no WhatsApp"/>
+  <meta property="og:description" content="Receba ofertas de mercado, limpeza, higiene e produtos para casa com preços mais baixos. Grupo gratuito com +12 mil membros."/>
+  <meta property="og:image"       content="https://compradasemana.netlify.app/assets/images/logo.webp"/>
+
+  <!-- TWITTER CARD -->
+  <meta name="twitter:card"        content="summary_large_image"/>
+  <meta name="twitter:title"       content="Compra da Semana — Ofertas de mercado no WhatsApp"/>
+  <meta name="twitter:description" content="Receba ofertas de mercado, limpeza, higiene e produtos para casa com preços mais baixos."/>
+  <meta name="twitter:image"       content="https://compradasemana.netlify.app/assets/images/logo.webp"/>
 
   <!-- MONTSERRAT -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -41,6 +57,7 @@
     'https://connect.facebook.net/en_US/fbevents.js');
 
     fbq('init', '777056694717675');
+    fbq('track', 'PageView');
   </script>
 
 </head>
@@ -83,7 +100,7 @@
 
       <!-- SPOTS -->
       <div class="spots-box">
-        <span id="spotsNumber">37</span> vagas restantes hoje
+        <span id="spotsNumber"></span> vagas restantes hoje
       </div>
 
       <!-- CTA -->
