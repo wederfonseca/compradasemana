@@ -14,7 +14,17 @@ function generateEventId() {
 
 }
 
-async function logClick() {
+function readCookie(name) {
+
+  const match = document.cookie.match(
+    '(^|;)\\s*' + name + '\\s*=\\s*([^;]+)'
+  );
+
+  return match ? decodeURIComponent(match.pop()) : null;
+
+}
+
+async function sendEvent(payload) {
 
   try {
 
@@ -24,12 +34,13 @@ async function logClick() {
         'Content-Type': 'application/json',
         'x-capi-signature': 'v1'
       },
+      body: payload,
       keepalive: true
     });
 
   } catch (err) {
 
-    console.warn('[log] send error', err);
+    console.warn('[CAPI] send error', err);
 
   }
 
@@ -67,11 +78,45 @@ document.addEventListener('DOMContentLoaded', () => {
       button.textContent = 'Abrindo...';
       button.style.opacity = '0.75';
 
-      /* ================= BROWSER EVENT ================= */
+      /* ================= IDs ================= */
 
       const eventId = generateEventId();
 
       sessionStorage.setItem('lead_sent', eventId);
+
+      /* ================= SERVER EVENT ================= */
+
+      const payload = JSON.stringify({
+
+        event_id: eventId,
+
+        event_source_url: window.location.href,
+
+        fbp: readCookie('_fbp'),
+        fbc: readCookie('_fbc'),
+
+        custom_data: {
+          destination: 'whatsapp_group',
+          brand: 'Compra da Semana',
+          group_name: 'CompraDaSemana'
+        }
+
+      });
+
+      sendEvent(payload);
+
+      /* ================= BROWSER EVENT + REDIRECT ================= */
+
+      let redirected = false;
+
+      const redirect = () => {
+        if (redirected) return;
+        redirected = true;
+        window.location.href = targetUrl;
+      };
+
+      // fallback: redireciona após WAIT_MS caso o callback não dispare
+      setTimeout(redirect, WAIT_MS);
 
       fbq(
         'track',
@@ -81,20 +126,9 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
           eventID: eventId
-        }
+        },
+        redirect
       );
-
-      /* ================= LOG CLICK ================= */
-
-      logClick();
-
-      /* ================= REDIRECT ================= */
-
-      setTimeout(() => {
-
-        window.location.href = targetUrl;
-
-      }, WAIT_MS);
 
     });
 
